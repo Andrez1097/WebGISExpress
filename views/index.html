@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,29 +10,40 @@
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"
+        integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
     <script src="/javascripts/main.js"></script>
 
 
     <title>WebGIS con Barra de Tareas y Puntos Personalizados</title>
     <style>
         /* Estilos principales */
-        body, html {
+        body,
+        html {
             margin: 0;
             padding: 0;
             height: 100%;
             display: flex;
             flex-direction: column;
         }
+
         #mapContainer {
-            flex-grow: 1; /* El mapa ocupa el espacio disponible */
+            flex-grow: 1;
+            /* El mapa ocupa el espacio disponible */
             width: 100%;
-            height: calc(100vh - 300px); /* Mapa ocupa toda la altura menos el espacio del panel inferior */
+            height: calc(100vh - 300px);
+            /* Mapa ocupa toda la altura menos el espacio del panel inferior */
         }
+
         #task-bar {
-            height: 300px; /* Altura fija para el panel inferior */
-            overflow-y: auto; /* Permite el desplazamiento si hay mucho contenido */
+            height: 300px;
+            /* Altura fija para el panel inferior */
+            overflow-y: auto;
+            /* Permite el desplazamiento si hay mucho contenido */
             background-color: white;
             border-top: 1px solid #ccc;
             display: flex;
@@ -39,38 +51,54 @@
             align-items: center;
             padding: 10px;
         }
-        #table-container, #chart-container {
+
+        #table-container,
+        #chart-container {
             width: 45%;
             padding: 10px;
         }
+
         canvas {
             width: 100%;
             height: 100%;
         }
+
         /* Estilos para los dropdowns */
-        .dropdown-content, .sub-dropdown-content {
+        .dropdown-content,
+        .sub-dropdown-content {
             display: none;
             position: absolute;
             background-color: white;
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             z-index: 1;
         }
+
         .nav-item:hover .dropdown-content {
-            display: block; /* Mostrar dropdown en hover */
+            display: block;
+            /* Mostrar dropdown en hover */
         }
+
         .sub-dropdown:hover .sub-dropdown-content {
-            display: block; /* Mostrar sub-dropdown en hover */
+            display: block;
+            /* Mostrar sub-dropdown en hover */
         }
+
         .sub-dropdown-content {
-            left: 100%; /* Mover sub-dropdown a la derecha */
-            top: 0; /* Alinearlo en la parte superior del padre */
+            left: 100%;
+            /* Mover sub-dropdown a la derecha */
+            top: 0;
+            /* Alinearlo en la parte superior del padre */
         }
+
         .sub-dropdown-content p {
-            margin: 0; /* Eliminar margen de los párrafos dentro del sub-dropdown */
-            padding: 10px; /* Añadir padding a los párrafos */
+            margin: 0;
+            /* Eliminar margen de los párrafos dentro del sub-dropdown */
+            padding: 10px;
+            /* Añadir padding a los párrafos */
         }
     </style>
 </head>
+
 <body>
     <div id="loading-spinner" style="display: none;">Loading...</div>
     <!-- Contenedor principal -->
@@ -81,757 +109,832 @@
                 <h4>Menú de Funciones</h4>
                 <ul class="nav flex-column">
                     <!-- Menú de Gestión de Regiones -->
-<li class="nav-item mb-3 dropdown">
-    <button class="dropbtn nav-link text-light" id="gestionRegiones">Gestión de Regiones</button>
-    <div class="dropdown-content">
-        
-        <!-- Opción "Agregar Región" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalAgregarRegion">Agregar Región</button>
-        
-        <!-- Opción "Editar Región" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalEditarRegion">Editar Región</button>
-        
-        <!-- Opción "Eliminar Región" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalEliminarRegion">Eliminar Región</button>
-        
-    </div>
-</li>
+                    <li class="nav-item mb-3 dropdown">
+                        <button class="dropbtn nav-link text-light" id="gestionRegiones">Gestión de Regiones</button>
+                        <div class="dropdown-content">
 
-<!-- Modal "Agregar Región" -->
-<div class="modal fade" id="modalAgregarRegion" tabindex="-1" aria-labelledby="agregarRegionLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="agregarRegionLabel">Agregar Región</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="coordenadas" class="form-label">Insertar Coordenadas</label>
-                    <input type="text" class="form-control" id="coordenadas" placeholder="Ejemplo: 10.1234, -74.5678">
-                </div>
-                <div class="mb-3">
-                    <label for="municipio" class="form-label">Insertar Municipio</label>
-                    <input type="text" class="form-control" id="municipio">
-                </div>
-                <div class="mb-3">
-                    <label for="departamento" class="form-label">Insertar Departamento</label>
-                    <input type="text" class="form-control" id="departamento">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
+                            <!-- Opción "Agregar Región" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalAgregarRegion">Agregar Región</button>
 
-<!-- Modal "Editar Región" -->
-<div class="modal fade" id="modalEditarRegion" tabindex="-1" aria-labelledby="editarRegionLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editarRegionLabel">Editar Región</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="selectRegion" class="form-label">Seleccionar Región</label>
-                    <select class="form-select" id="selectRegion">
-                        <option>Via Industrial Occidental</option>
-                        <option>Portal Occidental</option>
-                        <option>Portal Oriental</option>
-                        <option>Casa Verde</option>
-                        <option>Peaje Sajonia</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="editarCoordenadas" class="form-label">Editar Coordenadas</label>
-                    <input type="text" class="form-control" id="editarCoordenadas" placeholder="Ejemplo: 10.1234, -74.5678">
-                </div>
-                <div class="mb-3">
-                    <label for="editarMunicipio" class="form-label">Editar Municipio</label>
-                    <input type="text" class="form-control" id="editarMunicipio">
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar Cambios</button>
-            </div>
-        </div>
-    </div>
-</div>
+                            <!-- Opción "Editar Región" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalEditarRegion">Editar Región</button>
 
-<!-- Modal "Eliminar Región" -->
-<div class="modal fade" id="modalEliminarRegion" tabindex="-1" aria-labelledby="eliminarRegionLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eliminarRegionLabel">Eliminar Región</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Via Industrial Occidental" id="viaIndustrial">
-                        <label class="form-check-label" for="viaIndustrial">
-                            Via Industrial Occidental
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Portal Occidental" id="portalOccidental">
-                        <label class="form-check-label" for="portalOccidental">
-                            Portal Occidental
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Portal Oriental" id="portalOriental">
-                        <label class="form-check-label" for="portalOriental">
-                            Portal Oriental
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Casa Verde" id="casaVerde">
-                        <label class="form-check-label" for="casaVerde">
-                            Casa Verde
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Peaje Sajonia" id="peajeSajonia">
-                        <label class="form-check-label" for="peajeSajonia">
-                            Peaje Sajonia
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Eliminar Seleccionadas</button>
-            </div>
-        </div>
-    </div>
-</div>
+                            <!-- Opción "Eliminar Región" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalEliminarRegion">Eliminar Región</button>
 
-<!-- Asegúrate de tener incluido Bootstrap CSS y JS en tu proyecto -->
+                        </div>
+                    </li>
 
-                    
+                    <!-- Modal "Agregar Región" -->
+                    <div class="modal fade" id="modalAgregarRegion" tabindex="-1" aria-labelledby="agregarRegionLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="agregarRegionLabel">Agregar Región</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="coordenadas" class="form-label">Insertar Coordenadas</label>
+                                        <input type="text" class="form-control" id="coordenadas"
+                                            placeholder="Ejemplo: 10.1234, -74.5678">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="municipio" class="form-label">Insertar Municipio</label>
+                                        <input type="text" class="form-control" id="municipio">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="departamento" class="form-label">Insertar Departamento</label>
+                                        <input type="text" class="form-control" id="departamento">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal "Editar Región" -->
+                    <div class="modal fade" id="modalEditarRegion" tabindex="-1" aria-labelledby="editarRegionLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editarRegionLabel">Editar Región</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="selectRegion" class="form-label">Seleccionar Región</label>
+                                        <select class="form-select" id="selectRegion">
+                                            <option>Via Industrial Occidental</option>
+                                            <option>Portal Occidental</option>
+                                            <option>Portal Oriental</option>
+                                            <option>Casa Verde</option>
+                                            <option>Peaje Sajonia</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editarCoordenadas" class="form-label">Editar Coordenadas</label>
+                                        <input type="text" class="form-control" id="editarCoordenadas"
+                                            placeholder="Ejemplo: 10.1234, -74.5678">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="editarMunicipio" class="form-label">Editar Municipio</label>
+                                        <input type="text" class="form-control" id="editarMunicipio">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary">Guardar Cambios</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal "Eliminar Región" -->
+                    <div class="modal fade" id="modalEliminarRegion" tabindex="-1" aria-labelledby="eliminarRegionLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="eliminarRegionLabel">Eliminar Región</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                value="Via Industrial Occidental" id="viaIndustrial">
+                                            <label class="form-check-label" for="viaIndustrial">
+                                                Via Industrial Occidental
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Portal Occidental"
+                                                id="portalOccidental">
+                                            <label class="form-check-label" for="portalOccidental">
+                                                Portal Occidental
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Portal Oriental"
+                                                id="portalOriental">
+                                            <label class="form-check-label" for="portalOriental">
+                                                Portal Oriental
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Casa Verde"
+                                                id="casaVerde">
+                                            <label class="form-check-label" for="casaVerde">
+                                                Casa Verde
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Peaje Sajonia"
+                                                id="peajeSajonia">
+                                            <label class="form-check-label" for="peajeSajonia">
+                                                Peaje Sajonia
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-danger">Eliminar Seleccionadas</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Asegúrate de tener incluido Bootstrap CSS y JS en tu proyecto -->
+
+
                     <!-- Menú Gestión de Estaciones -->
-<li class="nav-item mb-3 dropdown">
-    <button class="dropbtn nav-link text-light" id="gestionEstaciones">Gestión de Estaciones</button>
-    <div class="dropdown-content">
-        
-        <!-- Submenú para "Agregar Estación" -->
-        <div class="sub-dropdown">
-            <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#agregarEstacionModal">Agregar Estación</button>
-        </div>
+                    <li class="nav-item mb-3 dropdown">
+                        <button class="dropbtn nav-link text-light" id="gestionEstaciones">Gestión de
+                            Estaciones</button>
+                        <div class="dropdown-content">
 
-        <!-- Submenú para "Editar Estación" -->
-        <div class="sub-dropdown">
-            <button class="sub-dropbtn">Editar Estación</button>
-            <div class="sub-dropdown-content">
-                <!-- Años con Modal para Editar Estación -->
-                <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#editarEstacionModal">2021</button>
-                <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#editarEstacionModal">2022</button>
-                <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#editarEstacionModal">2023</button>
-                <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#editarEstacionModal">2024</button>
-            </div>
-        </div>
+                            <!-- Submenú para "Agregar Estación" -->
+                            <div class="sub-dropdown">
+                                <button class="sub-dropbtn" data-bs-toggle="modal"
+                                    data-bs-target="#agregarEstacionModal">Agregar Estación</button>
+                            </div>
 
-        <!-- Submenú para "Eliminar Estación" -->
-        <div class="sub-dropdown">
-            <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#eliminarEstacionModal">Eliminar Estación</button>
-        </div>
+                            <!-- Submenú para "Editar Estación" -->
+                            <div class="sub-dropdown">
+                                <button class="sub-dropbtn">Editar Estación</button>
+                                <div class="sub-dropdown-content">
+                                    <!-- Años con Modal para Editar Estación -->
+                                    <button class="sub-dropbtn" data-bs-toggle="modal"
+                                        data-bs-target="#editarEstacionModal">2021</button>
+                                    <button class="sub-dropbtn" data-bs-toggle="modal"
+                                        data-bs-target="#editarEstacionModal">2022</button>
+                                    <button class="sub-dropbtn" data-bs-toggle="modal"
+                                        data-bs-target="#editarEstacionModal">2023</button>
+                                    <button class="sub-dropbtn" data-bs-toggle="modal"
+                                        data-bs-target="#editarEstacionModal">2024</button>
+                                </div>
+                            </div>
 
-        <!-- Submenú para "Visualización de Estación" -->
-        <div class="sub-dropdown">
-            <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#visualizarEstacionModal">Visualizar Estación</button>
-        </div>
-    </div>
-</li>
+                            <!-- Submenú para "Eliminar Estación" -->
+                            <div class="sub-dropdown">
+                                <button class="sub-dropbtn" data-bs-toggle="modal"
+                                    data-bs-target="#eliminarEstacionModal">Eliminar Estación</button>
+                            </div>
 
-<!-- Modales para cada acción -->
-
-<!-- Modal Agregar Estación -->
-<div class="modal fade" id="agregarEstacionModal" tabindex="-1" aria-labelledby="agregarEstacionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="agregarEstacionModalLabel">Agregar Estación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="nombreEstacion" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombreEstacion">
-                    </div>
-                    <div class="mb-3">
-                        <label for="coordenadasEstacion" class="form-label">Coordenadas</label>
-                        <input type="text" class="form-control" id="coordenadasEstacion">
-                    </div>
-                    <div class="mb-3">
-                        <label for="parametrosEstacion" class="form-label">Parámetros</label>
-                        <input type="text" class="form-control" id="parametrosEstacion">
-                    </div>
-                    <div class="mb-3">
-                        <label for="concentracionEstacion" class="form-label">Concentración</label>
-                        <input type="text" class="form-control" id="concentracionEstacion">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Editar Estación -->
-<div class="modal fade" id="editarEstacionModal" tabindex="-1" aria-labelledby="editarEstacionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editarEstacionModalLabel">Editar Estación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="regionEstacion" class="form-label">Selecciona una Región</label>
-                        <select class="form-select" id="regionEstacion">
-                            <option>Via Industrial Occidental</option>
-                            <option>Portal Occidental</option>
-                            <option>Portal Oriental</option>
-                            <option>Casa Verde</option>
-                            <option>Peaje Sajonia</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="coordenadasEditEstacion" class="form-label">Coordenadas</label>
-                        <input type="text" class="form-control" id="coordenadasEditEstacion">
-                    </div>
-                    <div class="mb-3">
-                        <label for="parametrosEditEstacion" class="form-label">Parámetros</label>
-                        <input type="text" class="form-control" id="parametrosEditEstacion">
-                    </div>
-                    <div class="mb-3">
-                        <label for="concentracionEditEstacion" class="form-label">Concentración</label>
-                        <input type="text" class="form-control" id="concentracionEditEstacion">
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Eliminar Estación -->
-<div class="modal fade" id="modalEliminarRegion" tabindex="-1" aria-labelledby="eliminarRegionLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eliminarRegionLabel">Eliminar Estaciones</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Via Industrial Occidental" id="viaIndustrial">
-                        <label class="form-check-label" for="viaIndustrial">
-                            Via Industrial Occidental
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Portal Occidental" id="portalOccidental">
-                        <label class="form-check-label" for="portalOccidental">
-                            Portal Occidental
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Portal Oriental" id="portalOriental">
-                        <label class="form-check-label" for="portalOriental">
-                            Portal Oriental
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Casa Verde" id="casaVerde">
-                        <label class="form-check-label" for="casaVerde">
-                            Casa Verde
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Peaje Sajonia" id="peajeSajonia">
-                        <label class="form-check-label" for="peajeSajonia">
-                            Peaje Sajonia
-                        </label>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Eliminar Seleccionadas</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal Visualizar Estación -->
-<div class="modal fade" id="visualizarEstacionModal" tabindex="-1" aria-labelledby="visualizarEstacionModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="visualizarEstacionModalLabel">Visualizar Estación</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <label class="form-label">Selecciona las Estaciones a Visualizar</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Via Industrial Occidental">
-                        <label class="form-check-label">Via Industrial Occidental</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Portal Occidental">
-                        <label class="form-check-label">Portal Occidental</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Portal Oriental">
-                        <label class="form-check-label">Portal Oriental</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Casa Verde">
-                        <label class="form-check-label">Casa Verde</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="Peaje Sajonia">
-                        <label class="form-check-label">Peaje Sajonia</label>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-                    
-<li class="nav-item mb-3 dropdown">
-    <button class="dropbtn nav-link text-light" id="gestionContaminantes">Gestión de Contaminantes</button>
-    <div class="dropdown-content">
-        <!-- Opción "Agregar Contaminante" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalAgregarContaminante">Agregar Contaminante</button>
-        
-        <!-- Opción "Eliminar Contaminante" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalEliminarContaminante">Eliminar Contaminante</button>
-        
-        <!-- Opción "Visualizar Contaminante" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalVisualizarContaminante">Visualizar Contaminante</button>
-    </div>
-</li>
-
-<!-- Modal "Agregar Contaminante" -->
-<div class="modal fade" id="modalAgregarContaminante" tabindex="-1" aria-labelledby="agregarContaminanteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="agregarContaminanteLabel">Agregar Contaminante</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <label for="anioContaminante" class="form-label">Año</label>
-                    <select class="form-select" id="anioContaminante">
-                        <option>2021</option>
-                        <option>2022</option>
-                        <option>2023</option>
-                        <option>2024</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="regionContaminante" class="form-label">Región</label>
-                    <input type="text" class="form-control" id="regionContaminante" placeholder="Ejemplo: Región Norte">
-                </div>
-                <div class="mb-3">
-                    <label for="estacionContaminante" class="form-label">Estación</label>
-                    <select class="form-select" id="estacionContaminante">
-                        <option>Via Industrial Occidental</option>
-                        <option>Portal Occidental</option>
-                        <option>Portal Oriente</option>
-                        <option>Casa Verde</option>
-                        <option>Peaje Sajonia</option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="contaminante" class="form-label">Contaminante</label>
-                    <select class="form-select" id="contaminante">
-                        <option>PM10</option>
-                        <option>PM2.5</option>
-                        <option>SO2</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Guardar</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal "Eliminar Contaminante" -->
-<div class="modal fade" id="modalEliminarContaminante" tabindex="-1" aria-labelledby="eliminarContaminanteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="eliminarContaminanteLabel">Eliminar Contaminante</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="anioEliminar" class="form-label">Año</label>
-                        <select class="form-select" id="anioEliminar">
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="estacionEliminar" class="form-label">Estación</label>
-                        <select class="form-select" id="estacionEliminar">
-                            <option>Via Industrial Occidental</option>
-                            <option>Portal Occidental</option>
-                            <option>Portal Oriente</option>
-                            <option>Casa Verde</option>
-                            <option>Peaje Sajonia</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contaminanteEliminar" class="form-label">Contaminante</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="PM10" id="pm10Eliminar">
-                            <label class="form-check-label" for="pm10Eliminar">
-                                PM10
-                            </label>
+                            <!-- Submenú para "Visualización de Estación" -->
+                            <div class="sub-dropdown">
+                                <button class="sub-dropbtn" data-bs-toggle="modal"
+                                    data-bs-target="#visualizarEstacionModal">Visualizar Estación</button>
+                            </div>
                         </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="PM2.5" id="pm25Eliminar">
-                            <label class="form-check-label" for="pm25Eliminar">
-                                PM2.5
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="SO2" id="so2Eliminar">
-                            <label class="form-check-label" for="so2Eliminar">
-                                SO2
-                            </label>
+                    </li>
+
+                    <!-- Modales para cada acción -->
+
+                    <!-- Modal Agregar Estación -->
+                    <div class="modal fade" id="agregarEstacionModal" tabindex="-1"
+                        aria-labelledby="agregarEstacionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="agregarEstacionModalLabel">Agregar Estación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="nombreEstacion" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="nombreEstacion">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="coordenadasEstacion" class="form-label">Coordenadas</label>
+                                            <input type="text" class="form-control" id="coordenadasEstacion">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="parametrosEstacion" class="form-label">Parámetros</label>
+                                            <input type="text" class="form-control" id="parametrosEstacion">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="concentracionEstacion" class="form-label">Concentración</label>
+                                            <input type="text" class="form-control" id="concentracionEstacion">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-danger">Eliminar Seleccionados</button>
-            </div>
-        </div>
-    </div>
-</div>
 
-<!-- Modal "Visualizar Contaminante" -->
-<div class="modal fade" id="modalVisualizarContaminante" tabindex="-1" aria-labelledby="visualizarContaminanteLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="visualizarContaminanteLabel">Visualizar Contaminante</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <div class="mb-3">
-                        <label for="anioVisualizar" class="form-label">Año</label>
-                        <select class="form-select" id="anioVisualizar">
-                            <option>2021</option>
-                            <option>2022</option>
-                            <option>2023</option>
-                            <option>2024</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="estacionVisualizar" class="form-label">Estación</label>
-                        <select class="form-select" id="estacionVisualizar">
-                            <option>Via Industrial Occidental</option>
-                            <option>Portal Occidental</option>
-                            <option>Portal Oriente</option>
-                            <option>Casa Verde</option>
-                            <option>Peaje Sajonia</option>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contaminanteVisualizar" class="form-label">Contaminante</label>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="PM10" id="pm10Visualizar">
-                            <label class="form-check-label" for="pm10Visualizar">
-                                PM10
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="PM2.5" id="pm25Visualizar">
-                            <label class="form-check-label" for="pm25Visualizar">
-                                PM2.5
-                            </label>
-                        </div>
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" value="SO2" id="so2Visualizar">
-                            <label class="form-check-label" for="so2Visualizar">
-                                SO2
-                            </label>
+                    <!-- Modal Editar Estación -->
+                    <div class="modal fade" id="editarEstacionModal" tabindex="-1"
+                        aria-labelledby="editarEstacionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="editarEstacionModalLabel">Editar Estación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="regionEstacion" class="form-label">Selecciona una Región</label>
+                                            <select class="form-select" id="regionEstacion">
+                                                <option>Via Industrial Occidental</option>
+                                                <option>Portal Occidental</option>
+                                                <option>Portal Oriental</option>
+                                                <option>Casa Verde</option>
+                                                <option>Peaje Sajonia</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="coordenadasEditEstacion" class="form-label">Coordenadas</label>
+                                            <input type="text" class="form-control" id="coordenadasEditEstacion">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="parametrosEditEstacion" class="form-label">Parámetros</label>
+                                            <input type="text" class="form-control" id="parametrosEditEstacion">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="concentracionEditEstacion"
+                                                class="form-label">Concentración</label>
+                                            <input type="text" class="form-control" id="concentracionEditEstacion">
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Visualizar Seleccionados</button>
+
+                    <!-- Modal Eliminar Estación -->
+                    <div class="modal fade" id="modalEliminarRegion" tabindex="-1" aria-labelledby="eliminarRegionLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="eliminarRegionLabel">Eliminar Estaciones</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                value="Via Industrial Occidental" id="viaIndustrial">
+                                            <label class="form-check-label" for="viaIndustrial">
+                                                Via Industrial Occidental
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Portal Occidental"
+                                                id="portalOccidental">
+                                            <label class="form-check-label" for="portalOccidental">
+                                                Portal Occidental
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Portal Oriental"
+                                                id="portalOriental">
+                                            <label class="form-check-label" for="portalOriental">
+                                                Portal Oriental
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Casa Verde"
+                                                id="casaVerde">
+                                            <label class="form-check-label" for="casaVerde">
+                                                Casa Verde
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Peaje Sajonia"
+                                                id="peajeSajonia">
+                                            <label class="form-check-label" for="peajeSajonia">
+                                                Peaje Sajonia
+                                            </label>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-danger">Eliminar Seleccionadas</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal Visualizar Estación -->
+                    <div class="modal fade" id="visualizarEstacionModal" tabindex="-1"
+                        aria-labelledby="visualizarEstacionModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="visualizarEstacionModalLabel">Visualizar Estación</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Cerrar"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <label class="form-label">Selecciona las Estaciones a Visualizar</label>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox"
+                                                value="Via Industrial Occidental">
+                                            <label class="form-check-label">Via Industrial Occidental</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Portal Occidental">
+                                            <label class="form-check-label">Portal Occidental</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Portal Oriental">
+                                            <label class="form-check-label">Portal Oriental</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Casa Verde">
+                                            <label class="form-check-label">Casa Verde</label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="Peaje Sajonia">
+                                            <label class="form-check-label">Peaje Sajonia</label>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <li class="nav-item mb-3 dropdown">
+                        <button class="dropbtn nav-link text-light" id="gestionContaminantes">Gestión de
+                            Contaminantes</button>
+                        <div class="dropdown-content">
+                            <!-- Opción "Agregar Contaminante" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalAgregarContaminante">Agregar Contaminante</button>
+
+                            <!-- Opción "Eliminar Contaminante" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalEliminarContaminante">Eliminar Contaminante</button>
+
+                            <!-- Opción "Visualizar Contaminante" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalVisualizarContaminante">Visualizar Contaminante</button>
+                        </div>
+                    </li>
+
+                    <!-- Modal "Agregar Contaminante" -->
+                    <div class="modal fade" id="modalAgregarContaminante" tabindex="-1"
+                        aria-labelledby="agregarContaminanteLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="agregarContaminanteLabel">Agregar Contaminante</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="anioContaminante" class="form-label">Año</label>
+                                        <select class="form-select" id="anioContaminante">
+                                            <option>2021</option>
+                                            <option>2022</option>
+                                            <option>2023</option>
+                                            <option>2024</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="regionContaminante" class="form-label">Región</label>
+                                        <input type="text" class="form-control" id="regionContaminante"
+                                            placeholder="Ejemplo: Región Norte">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="estacionContaminante" class="form-label">Estación</label>
+                                        <select class="form-select" id="estacionContaminante">
+                                            <option>Via Industrial Occidental</option>
+                                            <option>Portal Occidental</option>
+                                            <option>Portal Oriente</option>
+                                            <option>Casa Verde</option>
+                                            <option>Peaje Sajonia</option>
+                                        </select>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="contaminante" class="form-label">Contaminante</label>
+                                        <select class="form-select" id="contaminante">
+                                            <option>PM10</option>
+                                            <option>PM2.5</option>
+                                            <option>SO2</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal "Eliminar Contaminante" -->
+                    <div class="modal fade" id="modalEliminarContaminante" tabindex="-1"
+                        aria-labelledby="eliminarContaminanteLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="eliminarContaminanteLabel">Eliminar Contaminante</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="anioEliminar" class="form-label">Año</label>
+                                            <select class="form-select" id="anioEliminar">
+                                                <option>2021</option>
+                                                <option>2022</option>
+                                                <option>2023</option>
+                                                <option>2024</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="estacionEliminar" class="form-label">Estación</label>
+                                            <select class="form-select" id="estacionEliminar">
+                                                <option>Via Industrial Occidental</option>
+                                                <option>Portal Occidental</option>
+                                                <option>Portal Oriente</option>
+                                                <option>Casa Verde</option>
+                                                <option>Peaje Sajonia</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contaminanteEliminar" class="form-label">Contaminante</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="PM10"
+                                                    id="pm10Eliminar">
+                                                <label class="form-check-label" for="pm10Eliminar">
+                                                    PM10
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="PM2.5"
+                                                    id="pm25Eliminar">
+                                                <label class="form-check-label" for="pm25Eliminar">
+                                                    PM2.5
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="SO2"
+                                                    id="so2Eliminar">
+                                                <label class="form-check-label" for="so2Eliminar">
+                                                    SO2
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-danger">Eliminar Seleccionados</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal "Visualizar Contaminante" -->
+                    <div class="modal fade" id="modalVisualizarContaminante" tabindex="-1"
+                        aria-labelledby="visualizarContaminanteLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="visualizarContaminanteLabel">Visualizar Contaminante
+                                    </h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="anioVisualizar" class="form-label">Año</label>
+                                            <select class="form-select" id="anioVisualizar">
+                                                <option>2021</option>
+                                                <option>2022</option>
+                                                <option>2023</option>
+                                                <option>2024</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="estacionVisualizar" class="form-label">Estación</label>
+                                            <select class="form-select" id="estacionVisualizar">
+                                                <option>Via Industrial Occidental</option>
+                                                <option>Portal Occidental</option>
+                                                <option>Portal Oriente</option>
+                                                <option>Casa Verde</option>
+                                                <option>Peaje Sajonia</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="contaminanteVisualizar" class="form-label">Contaminante</label>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="PM10"
+                                                    id="pm10Visualizar">
+                                                <label class="form-check-label" for="pm10Visualizar">
+                                                    PM10
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="PM2.5"
+                                                    id="pm25Visualizar">
+                                                <label class="form-check-label" for="pm25Visualizar">
+                                                    PM2.5
+                                                </label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" value="SO2"
+                                                    id="so2Visualizar">
+                                                <label class="form-check-label" for="so2Visualizar">
+                                                    SO2
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary">Visualizar Seleccionados</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <li class="nav-item mb-3 dropdown">
+                        <button class="dropbtn nav-link text-light" id="consultasGraficos">Consultas y Gráficos</button>
+                        <div class="dropdown-content">
+                            <!-- Opción "Análisis de Datos" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalAnalisisDatos">Análisis de Datos</button>
+                        </div>
+                    </li>
+
+                    <!-- Modal "Análisis de Datos" -->
+                    <div class="modal fade" id="modalAnalisisDatos" tabindex="-1" aria-labelledby="analisisDatosLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="analisisDatosLabel">Análisis de Datos</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <!-- Año (Checkbox) -->
+                                    <div class="mb-3">
+                                        <label for="selectAño" class="form-label">Año</label><br>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="2021" id="año2021">
+                                            <label class="form-check-label" for="año2021">
+                                                2021
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="2022" id="año2022">
+                                            <label class="form-check-label" for="año2022">
+                                                2022
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="2023" id="año2023">
+                                            <label class="form-check-label" for="año2023">
+                                                2023
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="2024" id="año2024">
+                                            <label class="form-check-label" for="año2024">
+                                                2024
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Estación (Dropdown) -->
+                                    <div class="mb-3">
+                                        <label for="selectEstacion" class="form-label">Estación</label>
+                                        <select class="form-select" id="selectEstacion">
+                                            <option>Via Industrial Occidental</option>
+                                            <option>Portal Occidental</option>
+                                            <option>Portal Oriente</option>
+                                            <option>Casa Verde</option>
+                                            <option>Peaje Sajonia</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Contaminante (Checkbox) -->
+                                    <div class="mb-3">
+                                        <label for="selectContaminante" class="form-label">Contaminante</label><br>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="PM10" id="pm10">
+                                            <label class="form-check-label" for="pm10">
+                                                PM10
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="PM2.5" id="pm25">
+                                            <label class="form-check-label" for="pm25">
+                                                PM2.5
+                                            </label>
+                                        </div>
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" value="SO2" id="so2">
+                                            <label class="form-check-label" for="so2">
+                                                SO2
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <!-- Estadísticas y Gráficos (Dropdown) -->
+                                    <div class="mb-3">
+                                        <label for="selectEstadisticas" class="form-label">Estadísticas y
+                                            Gráficos</label>
+                                        <select class="form-select" id="selectEstadisticas">
+                                            <option>Promedio</option>
+                                            <option>Desviación Estándar</option>
+                                            <option>Máximo</option>
+                                            <option>Mínimo</option>
+                                            <option>Mediana</option>
+                                            <option>Rango</option>
+                                            <option>Cuartiles</option>
+                                            <option>Gráfico de Series de Tiempo</option>
+                                            <option>Mapa de Calor</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary">Generar Análisis</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <li class="nav-item mb-3 dropdown">
+                        <button class="dropbtn nav-link text-light" id="exportacionDatos">Exportación de Datos</button>
+                        <div class="dropdown-content">
+                            <!-- Opción "Exportar Datos" -->
+                            <button class="sub-dropbtn" data-bs-toggle="modal"
+                                data-bs-target="#modalExportacionDatos">Exportar Datos</button>
+                        </div>
+                    </li>
+
+                    <!-- Modal "Exportación de Datos" -->
+                    <div class="modal fade" id="modalExportacionDatos" tabindex="-1"
+                        aria-labelledby="exportacionDatosLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="exportacionDatosLabel">Exportación de Datos</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form>
+                                        <!-- Selección única -->
+                                        <div class="mb-3">
+                                            <label for="tipoExportacion" class="form-label">Seleccionar formato de
+                                                exportación</label>
+                                            <select class="form-select" id="tipoExportacion">
+                                                <option value="CSV">CSV</option>
+                                                <option value="JSON">JSON</option>
+                                                <option value="SHAPE">SHAPE</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary"
+                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-primary">Exportar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </ul>
+            </nav>
+
+            <!-- Contenedor del mapa -->
+            <div id="mapContainer" class="col-md-10">
+                <div id="map" style="height: 100%;"></div>
             </div>
         </div>
     </div>
-</div>
 
-                    
-<li class="nav-item mb-3 dropdown">
-    <button class="dropbtn nav-link text-light" id="consultasGraficos">Consultas y Gráficos</button>
-    <div class="dropdown-content">
-        <!-- Opción "Análisis de Datos" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalAnalisisDatos">Análisis de Datos</button>
-    </div>
-</li>
+    <!-- Barra de Tareas con tabla y gráficos -->
+    <div id="task-bar">
+        <div id="table-container">
+            <table id="results-table" class="display">
+                <thead>
+                    <tr>
+                        <th>Parámetro</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Se eliminó la información específica que no deseas mostrar -->
+                </tbody>
+            </table>
+        </div>
 
-<!-- Modal "Análisis de Datos" -->
-<div class="modal fade" id="modalAnalisisDatos" tabindex="-1" aria-labelledby="analisisDatosLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="analisisDatosLabel">Análisis de Datos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <!-- Año (Checkbox) -->
-                <div class="mb-3">
-                    <label for="selectAño" class="form-label">Año</label><br>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="2021" id="año2021">
-                        <label class="form-check-label" for="año2021">
-                            2021
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="2022" id="año2022">
-                        <label class="form-check-label" for="año2022">
-                            2022
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="2023" id="año2023">
-                        <label class="form-check-label" for="año2023">
-                            2023
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="2024" id="año2024">
-                        <label class="form-check-label" for="año2024">
-                            2024
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Estación (Dropdown) -->
-                <div class="mb-3">
-                    <label for="selectEstacion" class="form-label">Estación</label>
-                    <select class="form-select" id="selectEstacion">
-                        <option>Via Industrial Occidental</option>
-                        <option>Portal Occidental</option>
-                        <option>Portal Oriente</option>
-                        <option>Casa Verde</option>
-                        <option>Peaje Sajonia</option>
-                    </select>
-                </div>
-
-                <!-- Contaminante (Checkbox) -->
-                <div class="mb-3">
-                    <label for="selectContaminante" class="form-label">Contaminante</label><br>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="PM10" id="pm10">
-                        <label class="form-check-label" for="pm10">
-                            PM10
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="PM2.5" id="pm25">
-                        <label class="form-check-label" for="pm25">
-                            PM2.5
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="SO2" id="so2">
-                        <label class="form-check-label" for="so2">
-                            SO2
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Estadísticas y Gráficos (Dropdown) -->
-                <div class="mb-3">
-                    <label for="selectEstadisticas" class="form-label">Estadísticas y Gráficos</label>
-                    <select class="form-select" id="selectEstadisticas">
-                        <option>Promedio</option>
-                        <option>Desviación Estándar</option>
-                        <option>Máximo</option>
-                        <option>Mínimo</option>
-                        <option>Mediana</option>
-                        <option>Rango</option>
-                        <option>Cuartiles</option>
-                        <option>Gráfico de Series de Tiempo</option>
-                        <option>Mapa de Calor</option>
-                    </select>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Generar Análisis</button>
-            </div>
+        <div id="chart-container">
+            <canvas id="result-chart"></canvas>
         </div>
     </div>
-</div>
 
+    <!-- Inicialización del mapa -->
+    <script>
+        // Crear el mapa centrado en Medellín con la nueva capa base
+        var Stadia_StamenTerrainBackground = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain_background/{z}/{x}/{y}{r}.{ext}', {
+            minZoom: 0,
+            maxZoom: 18,
+            attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            ext: 'png'
+        });
 
-<li class="nav-item mb-3 dropdown">
-    <button class="dropbtn nav-link text-light" id="exportacionDatos">Exportación de Datos</button>
-    <div class="dropdown-content">
-        <!-- Opción "Exportar Datos" -->
-        <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalExportacionDatos">Exportar Datos</button>
-    </div>
-</li>
+        // Inicializar el mapa centrado en Medellín y agregar la nueva capa base
+        var map = L.map('map', {
+            center: [6.268658, -75.565801],  // Coordenadas de Medellín
+            zoom: 12,                        // Nivel de zoom
+            layers: [Stadia_StamenTerrainBackground]  // Nueva capa base
+        });
 
-<!-- Modal "Exportación de Datos" -->
-<div class="modal fade" id="modalExportacionDatos" tabindex="-1" aria-labelledby="exportacionDatosLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="exportacionDatosLabel">Exportación de Datos</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form>
-                    <!-- Selección única -->
-                    <div class="mb-3">
-                        <label for="tipoExportacion" class="form-label">Seleccionar formato de exportación</label>
-                        <select class="form-select" id="tipoExportacion">
-                            <option value="CSV">CSV</option>
-                            <option value="JSON">JSON</option>
-                            <option value="SHAPE">SHAPE</option>
-                        </select>
-                    </div>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                <button type="button" class="btn btn-primary">Exportar</button>
-            </div>
-        </div>
-    </div>
-</div>
+        // Lista de puntos a agregar
+        var puntos = [
+            { nombre: "via industrial occidental", latitud: 6.225925, longitud: -75.549889 },
+            { nombre: "portal occidental", latitud: 6.225436, longitud: -75.514164 },
+            { nombre: "portal oriental", latitud: 6.181306, longitud: -75.454422 },
+            { nombre: "casa verde", latitud: 6.222864, longitud: -75.534483 },
+            { nombre: "peaje sajonia", latitud: 6.179464, longitud: -75.452617 }
+        ];
 
-</ul>
-</nav>
+        // Add markers to map with hover tooltips
+        puntos.forEach(function (punto) {
+            var marker = L.marker([punto.latitud, punto.longitud]).addTo(map);
 
-<!-- Contenedor del mapa -->
-<div id="mapContainer" class="col-md-10">
-    <div id="map" style="height: 100%;"></div>
-</div>
-</div>
-</div>
+            // Bind a tooltip that will show on hover
+            marker.bindTooltip(punto.nombre, { permanent: false, direction: 'top' });
 
-<!-- Barra de Tareas con tabla y gráficos -->
-<div id="task-bar">
-<div id="table-container">
-<table id="results-table" class="display">
-    <thead>
-        <tr>
-            <th>Parámetro</th>
-            <th>Valor</th>
-        </tr>
-    </thead>
-    <tbody>
-        <!-- Se eliminó la información específica que no deseas mostrar -->
-    </tbody>
-</table>
-</div>
+            // Show tooltip on mouseover
+            marker.on('mouseover', function (e) {
+                marker.openTooltip();
+            });
 
-<div id="chart-container">
-<canvas id="result-chart"></canvas>
-</div>
-</div>
+            // Hide tooltip on mouseout
+            marker.on('mouseout', function (e) {
+                marker.closeTooltip();
+            });
+        });
 
-<!-- Inicialización del mapa -->
-<script>
-// Crear el mapa centrado en Medellín con la nueva capa base
-var Stadia_StamenTerrainBackground = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain_background/{z}/{x}/{y}{r}.{ext}', {
-minZoom: 0,
-maxZoom: 18,
-attribution: '&copy; <a href="https://www.stadiamaps.com/" target="_blank">Stadia Maps</a> &copy; <a href="https://www.stamen.com/" target="_blank">Stamen Design</a> &copy; <a href="https://openmaptiles.org/" target="_blank">OpenMapTiles</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-ext: 'png'
-});
+        // Inicialización del DataTable
+        $(document).ready(function () {
+            $('#results-table').DataTable();
+        });
 
-// Inicializar el mapa centrado en Medellín y agregar la nueva capa base
-var map = L.map('map', {
-center: [6.268658, -75.565801],  // Coordenadas de Medellín
-zoom: 12,                        // Nivel de zoom
-layers: [Stadia_StamenTerrainBackground]  // Nueva capa base
-});
-
-// Lista de puntos a agregar
-var puntos = [
-{ nombre: "via industrial occidental", latitud: 6.225925, longitud: -75.549889 },
-{ nombre: "portal occidental", latitud: 6.225436, longitud: -75.514164 },
-{ nombre: "portal oriental", latitud: 6.181306, longitud: -75.454422 },
-{ nombre: "casa verde", latitud: 6.222864, longitud: -75.534483 },
-{ nombre: "peaje sajonia", latitud: 6.179464, longitud: -75.452617 }
-];
-
-// Add markers to map with hover tooltips
-puntos.forEach(function(punto) {
-var marker = L.marker([punto.latitud, punto.longitud]).addTo(map);
-
-// Bind a tooltip that will show on hover
-marker.bindTooltip(punto.nombre, { permanent: false, direction: 'top' });
-
-// Show tooltip on mouseover
-marker.on('mouseover', function(e) {
-    marker.openTooltip();
-});
-
-// Hide tooltip on mouseout
-marker.on('mouseout', function(e) {
-    marker.closeTooltip();
-});
-});
-
-// Inicialización del DataTable
-$(document).ready(function() {
-    $('#results-table').DataTable();
-});
-
-// Inicialización del gráfico
-var ctx = document.getElementById('result-chart').getContext('2d');
-var chart = new Chart(ctx, {
-type: 'line',
-data: {
-    labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'], // Ejemplo de etiquetas
-    datasets: [{
-        label: 'Datos de Contaminantes',
-        data: [12, 19, 3, 5, 2], // Ejemplo de datos
-        borderColor: 'rgba(75, 192, 192, 1)',
-        backgroundColor: 'rgba(75, 192, 192, 0.2)',
-    }]
-},
-options: {}
-});
-</script>
+        // Inicialización del gráfico
+        var ctx = document.getElementById('result-chart').getContext('2d');
+        /*var chart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo'], // Ejemplo de etiquetas
+            datasets: [{
+                label: 'Datos de Contaminantes',
+                data: [12, 19, 3, 5, 2], // Ejemplo de datos
+                borderColor: 'rgba(75, 192, 192, 1)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+            }]
+        },
+        options: {}
+        });*/
+    </script>
 </body>
+
 </html>
