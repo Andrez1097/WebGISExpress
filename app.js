@@ -6,8 +6,10 @@ var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
+var geopointsRouter = require('./routes/geopoints');
 
 var app = express();
+const cors = require('cors');
 
 // Configuración del motor de vistas
 app.set('views', path.join(__dirname, 'views')); // Ruta de las vistas
@@ -21,9 +23,17 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Habilitar CORS para todas las solicitudes
+app.use(
+  cors({
+    origin: 'http://127.0.0.1:3000', // Permitir solo este origen
+  })
+);
+
 // Rutas
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+//app.use('/users', usersRouter);
+app.use('/api', geopointsRouter);
 
 // Manejador de errores 404
 app.use(function(req, res, next) {
