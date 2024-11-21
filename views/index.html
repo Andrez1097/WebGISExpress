@@ -809,14 +809,6 @@
         });
 
         // Lista de puntos a agregar
-        var puntos = [
-            { nombre: "via industrial occidental", latitud: 6.225925, longitud: -75.549889 },
-            { nombre: "portal occidental", latitud: 6.225436, longitud: -75.514164 },
-            { nombre: "portal oriental", latitud: 6.181306, longitud: -75.454422 },
-            { nombre: "casa verde", latitud: 6.222864, longitud: -75.534483 },
-            { nombre: "peaje sajonia", latitud: 6.179464, longitud: -75.452617 }
-        ];
-
         getGeoPoints().then((puntos) => {
             console.log(puntos);
             if (puntos && puntos.length > 0) {
