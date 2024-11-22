@@ -90,3 +90,7 @@ canvas {
 #map{
     height: 100vh;
 }
+
+.modal-content{
+    color:#000;
+}
