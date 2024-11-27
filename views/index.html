@@ -15,6 +15,8 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="app.js"></script>
 
     <script src="/javascripts/main.js"></script>
     <title>WebGIS con Barra de Tareas y Puntos Personalizados</title>
@@ -87,7 +89,7 @@
                 <div class="modal fade" id="modalEditarRegion" tabindex="-1" aria-labelledby="editarRegionLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editarRegionLabel">Editar Región</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -127,7 +129,7 @@
                 <div class="modal fade" id="modalEliminarRegion" tabindex="-1" aria-labelledby="eliminarRegionLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="eliminarRegionLabel">Eliminar Región</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -232,7 +234,7 @@
                 <div class="modal fade" id="agregarEstacionModal" tabindex="-1"
                     aria-labelledby="agregarEstacionModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="agregarEstacionModalLabel">Agregar Estación</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -266,7 +268,7 @@
                 <div class="modal fade" id="editarEstacionModal" tabindex="-1"
                     aria-labelledby="editarEstacionModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="editarEstacionModalLabel">Editar Estación</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -306,7 +308,7 @@
                 <div class="modal fade" id="modalEliminarRegion" tabindex="-1" aria-labelledby="eliminarRegionLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="eliminarRegionLabel">Eliminar Estaciones</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -364,7 +366,7 @@
                 <div class="modal fade" id="visualizarEstacionModal" tabindex="-1"
                     aria-labelledby="visualizarEstacionModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="visualizarEstacionModalLabel">Visualizar Estación</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -423,7 +425,7 @@
                 <div class="modal fade" id="modalAgregarContaminante" tabindex="-1"
                     aria-labelledby="agregarContaminanteLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="agregarContaminanteLabel">Agregar Contaminante</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -476,7 +478,7 @@
                 <div class="modal fade" id="modalEliminarContaminante" tabindex="-1"
                     aria-labelledby="eliminarContaminanteLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="eliminarContaminanteLabel">Eliminar Contaminante</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -542,7 +544,7 @@
                 <div class="modal fade" id="modalVisualizarContaminante" tabindex="-1"
                     aria-labelledby="visualizarContaminanteLabel" aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="visualizarContaminanteLabel">Visualizar Contaminante
                                 </h5>
@@ -619,7 +621,7 @@
                 <div class="modal fade" id="modalAnalisisDatos" tabindex="-1" aria-labelledby="analisisDatosLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="analisisDatosLabel">Análisis de Datos</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -730,7 +732,7 @@
                 <div class="modal fade" id="modalExportacionDatos" tabindex="-1" aria-labelledby="exportacionDatosLabel"
                     aria-hidden="true">
                     <div class="modal-dialog">
-                        <div class="modal-content">
+                        <div class="modal-content text-black">
                             <div class="modal-header">
                                 <h5 class="modal-title" id="exportacionDatosLabel">Exportación de Datos</h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -786,7 +788,7 @@
             </div>
 
             <div id="chart-container">
-                <canvas id="result-chart"></canvas>
+                <canvas id="result-chart" width="400" height="200"></canvas>
             </div>
         </div>
     </div>
@@ -834,13 +836,41 @@
             }
         });
 
+        getStatistics(filtros).then((puntos) => {
+            console.log(puntos);
+
+            if (puntos && puntos.length > 0) {
+                puntos.forEach((punto) => {
+                    console.log(`ID: ${punto.id}, Lat: ${punto.latitud}, Lon: ${punto.longitud}`);
+                    var marker = L.marker([punto.latitud, punto.longitud]).addTo(map);
+
+                    // Bind a tooltip that will show on hover
+                    marker.bindTooltip(
+                        `<strong>${punto.estacion}</strong><br>Promedio: ${punto.promedio.toFixed(2)}`, 
+                        { permanent: false, direction: 'top' }
+                    );
+
+                    // Show tooltip on mouseover
+                    marker.on('mouseover', function (e) {
+                        marker.openTooltip();
+                    });
+
+                    // Hide tooltip on mouseout
+                    marker.on('mouseout', function (e) {
+                        marker.closeTooltip();
+                    });
+                });
+            } else {
+                console.log('No se encontraron puntos.');
+            }
+        });
         // Inicialización del DataTable
         $(document).ready(function () {
             $('#results-table').DataTable();
         });
 
         // Inicialización del gráfico
-        var ctx = document.getElementById('result-chart').getContext('2d');
+        //var ctx = document.getElementById('result-chart').getContext('2d');
         /*var chart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -854,6 +884,64 @@
         },
         options: {}
         });*/
+
+        // Inicialización del gráfico
+        async function renderChart(filtros) {
+            const ctx = document.getElementById('result-chart').getContext('2d');
+            
+            // Llamada al endpoint para obtener las estadísticas
+            const data = await getStatistics(filtros);
+            
+            if (!data || data.length === 0) {
+                console.log("No se encontraron datos para el gráfico.");
+                return;
+            }
+
+            // Procesamiento de los datos para Chart.js
+            const labels = data.map(item => item.estacion); // Etiquetas, ejemplo: nombres de las estaciones
+            const datasetValues = data.map(item => item.promedio); // Datos, ejemplo: valores promedio
+
+            // Configuración del gráfico dinámico
+            const chart = new Chart(ctx, {
+                type: 'line', // Cambiar a 'bar', 'pie', etc., según el tipo de gráfico deseado
+                data: {
+                    labels: labels, // Etiquetas en el eje X
+                    datasets: [{
+                        label: 'Promedio de Contaminación por Estación',
+                        data: datasetValues, // Valores en el eje Y
+                        borderColor: 'rgba(75, 192, 192, 1)',
+                        backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                        tension: 0.4 // Hace la línea curva; cámbialo a 0 para líneas rectas
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        },
+                        tooltip: {
+                            enabled: true
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Estaciones'
+                            }
+                        },
+                        y: {
+                            title: {
+                                display: true,
+                                text: 'Promedio de Contaminación'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
 
         async function getGeoPoints() {
             const apiUrl = 'http://localhost:3000/api/geopoints';
@@ -873,6 +961,30 @@
                 console.error('Error al obtener los usuarios:', error);
             }
         }
+
+        async function getStatistics(filtros) {
+            const apiUrl = 'http://localhost:3000/api/statistics'; // Cambia el endpoint según tu configuración
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(filtros), // Enviar filtros al endpoint
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Error en la solicitud: ${response.statusText}`);
+                }
+
+                const puntos = await response.json();
+                return puntos; // Devuelve los datos obtenidos para usarlos en el mapa
+            } catch (error) {
+                console.error('Error al obtener las estadísticas:', error);
+            }
+        }
+
     </script>
 </body>
 
