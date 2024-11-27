@@ -15,13 +15,20 @@
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="app.js"></script>
+    <script src="/javascripts/gestionRegiones.js"></script>
 
     <script src="/javascripts/main.js"></script>
     <title>WebGIS con Barra de Tareas y Puntos Personalizados</title>
 
 </head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Estadísticas de Contaminación</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <body>
     <div id="loading-spinner" style="display: none;">Loading...</div>
@@ -47,7 +54,6 @@
                         <!-- Opción "Eliminar Región" -->
                         <button class="sub-dropbtn" data-bs-toggle="modal"
                             data-bs-target="#modalEliminarRegion">Eliminar Región</button>
-
                     </div>
                 </li>
 
@@ -787,14 +793,15 @@
                 </table>
             </div>
 
-            <div id="chart-container">
-                <canvas id="result-chart" width="400" height="200"></canvas>
-            </div>
+            <div id="chart-panel" style="width: 80%; margin: auto; background: #eaf5e0; padding: 20px; border-radius: 10px;">
+                <canvas id="chart"></canvas>
+            </div>            
         </div>
     </div>
 
     <!-- Inicialización del mapa -->
     <script>
+        var filtros = {};
         // Crear el mapa centrado en Medellín con la nueva capa base
         var Stadia_StamenTerrainBackground = L.tileLayer('https://tiles.stadiamaps.com/tiles/stamen_terrain_background/{z}/{x}/{y}{r}.{ext}', {
             minZoom: 0,
@@ -838,31 +845,6 @@
 
         getStatistics(filtros).then((puntos) => {
             console.log(puntos);
-
-            if (puntos && puntos.length > 0) {
-                puntos.forEach((punto) => {
-                    console.log(`ID: ${punto.id}, Lat: ${punto.latitud}, Lon: ${punto.longitud}`);
-                    var marker = L.marker([punto.latitud, punto.longitud]).addTo(map);
-
-                    // Bind a tooltip that will show on hover
-                    marker.bindTooltip(
-                        `<strong>${punto.estacion}</strong><br>Promedio: ${punto.promedio.toFixed(2)}`, 
-                        { permanent: false, direction: 'top' }
-                    );
-
-                    // Show tooltip on mouseover
-                    marker.on('mouseover', function (e) {
-                        marker.openTooltip();
-                    });
-
-                    // Hide tooltip on mouseout
-                    marker.on('mouseout', function (e) {
-                        marker.closeTooltip();
-                    });
-                });
-            } else {
-                console.log('No se encontraron puntos.');
-            }
         });
         // Inicialización del DataTable
         $(document).ready(function () {
