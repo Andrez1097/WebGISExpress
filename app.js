@@ -8,6 +8,7 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var geopointsRouter = require('./routes/geopoints');
 var statisticsRouter = require('./routes/statistics');
+var regionRoutes = require('./routes/region');
 
 var app = express();
 const cors = require('cors');
@@ -36,6 +37,7 @@ app.use('/', indexRouter);
 //app.use('/users', usersRouter);
 app.use('/api', geopointsRouter);
 app.use('/api', statisticsRouter);
+app.use('/api', regionRoutes);
 
 // Manejador de errores 404
 app.use(function(req, res, next) {

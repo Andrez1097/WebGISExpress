@@ -32,7 +32,7 @@ $(document).ready(function () {
         estaciones: selectedStation ? [selectedStation] : [], // Convertimos en array para cumplir con el backend
         regiones: [], // Puedes agregar regiones si las tienes en el formulario
         rangoFechas: {
-          desde: "2024-01-01", // Sustituye con el rango de fechas deseado
+          desde: "2021-01-01", // Sustituye con el rango de fechas deseado
           hasta: "2024-12-31", // Puedes obtener esto de inputs de tipo fecha
         },
       };

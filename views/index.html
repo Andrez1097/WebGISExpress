@@ -20,6 +20,7 @@
     <!--<script src="app.js"></script>-->
     <script src="/javascripts/region.js"></script>
     <script src="/javascripts/statistics.js"></script>
+    <script src="javascripts/region.js"></script>
 
     <script src="/javascripts/main.js"></script>
     <title>WebGIS con Barra de Tareas y Puntos Personalizados</title>
@@ -126,9 +127,13 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <form id="formEliminarRegiones">
-                                            <!-- Opciones dinámicas cargadas desde la base de datos -->
-                                        </form>
+                                        <div class="mb-3">
+                                            <label for="selectEliminarRegion" class="form-label">Seleccionar Región(es)</label>
+                                            <select id="selectEliminarRegion" class="form-select" multiple>
+                                                <!-- Opciones dinámicas cargadas desde la base de datos -->
+                                            </select>
+                                            <small class="form-text text-muted">Mantén presionada Ctrl (o Cmd en Mac) para seleccionar varias regiones.</small>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
