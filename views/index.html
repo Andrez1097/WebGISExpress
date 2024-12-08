@@ -21,6 +21,8 @@
     <script src="/javascripts/region.js"></script>
     <script src="/javascripts/statistics.js"></script>
     <script src="javascripts/region.js"></script>
+    <script src="javascripts/estacion.js"></script>
+    <script src="javascripts/contaminante.js"></script>
 
     <script src="/javascripts/main.js"></script>
     <title>WebGIS con Barra de Tareas y Puntos Personalizados</title>
@@ -171,29 +173,25 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="idEstacion" class="form-label">ID de la Estación</label>
-                                        <input type="text" class="form-control" id="idEstacion" placeholder="Ejemplo: 6">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="nombreEstacion" class="form-label">Nombre de la Estación</label>
-                                        <input type="text" class="form-control" id="nombreEstacion" placeholder="Ejemplo: Via Industrial Occidental">
+                                        <label for="nombreEstacion" class="form-label">Nombre</label>
+                                        <input type="text" class="form-control" id="nombreEstacion">
                                     </div>
                                     <div class="mb-3">
                                         <label for="descripcionEstacion" class="form-label">Descripción</label>
-                                        <textarea class="form-control" id="descripcionEstacion" rows="3" placeholder="Ejemplo: Punto ubicado antes de la entrada al túnel"></textarea>
+                                        <input type="text" class="form-control" id="descripcionEstacion">
                                     </div>
                                     <div class="mb-3">
                                         <label for="latitudEstacion" class="form-label">Latitud</label>
-                                        <input type="text" class="form-control" id="latitudEstacion" placeholder="Ejemplo: 6.225925">
+                                        <input type="text" class="form-control" id="latitudEstacion">
                                     </div>
                                     <div class="mb-3">
                                         <label for="longitudEstacion" class="form-label">Longitud</label>
-                                        <input type="text" class="form-control" id="longitudEstacion" placeholder="Ejemplo: -75.549889">
+                                        <input type="text" class="form-control" id="longitudEstacion">
                                     </div>
                                     <div class="mb-3">
                                         <label for="regionEstacion" class="form-label">Región</label>
-                                        <select class="form-select" id="regionEstacion">
-                                            <!-- Opciones dinámicas cargadas desde la base de datos -->
+                                        <select id="regionEstacion" class="form-select">
+                                            <!-- Las opciones serán cargadas dinámicamente -->
                                         </select>
                                     </div>
                                 </div>
@@ -352,9 +350,10 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <form id="formEliminarContaminantes">
+                                    <label for="selectEliminarContaminante" class="form-label">Seleccionar Contaminante</label>
+                                    <select class="form-select" id="selectEliminarContaminante" multiple>
                                         <!-- Opciones dinámicas cargadas desde la base de datos -->
-                                    </form>
+                                    </select>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
