@@ -1,6 +1,9 @@
 async function cargarRegiones() {
     try {
         const response = await fetch("http://localhost:3000/api/regiones");
+        if (!response.ok) {
+            throw new Error("Error al cargar las regiones");
+        }
         const regiones = await response.json();
 
         // Actualizar el select del modal "Editar Región"
@@ -25,6 +28,7 @@ async function cargarRegiones() {
 
     } catch (error) {
         console.error("Error al cargar las regiones:", error);
+        alert("No se pudieron cargar las regiones");
     }
 }
 
@@ -37,6 +41,11 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("btnGuardarRegion").addEventListener("click", async () => {
         const nombre = document.getElementById("nombre").value;
         const descripcion = document.getElementById("descripcion").value;
+
+        if (!nombre || !descripcion) {
+            alert("Por favor, ingresa el nombre y la descripción de la región.");
+            return;
+        }
 
         try {
             const response = await fetch("http://localhost:3000/api/regiones", {
@@ -61,6 +70,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const id = document.getElementById("selectRegion").value;
         const nombre = document.getElementById("editarNombre").value;
         const descripcion = document.getElementById("editarDescripcion").value;
+
+        if (!id || !nombre || !descripcion) {
+            alert("Por favor, selecciona una región y completa los campos de nombre y descripción.");
+            return;
+        }
 
         try {
             const response = await fetch(`http://localhost:3000/api/regiones/${id}`, {

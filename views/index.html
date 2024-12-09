@@ -288,22 +288,17 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="idContaminante" class="form-label">ID del Contaminante</label>
-                                        <input type="text" class="form-control" id="idContaminante" placeholder="Ejemplo: 6">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="nombreContaminante" class="form-label">Nombre del Contaminante</label>
-                                        <input type="text" class="form-control" id="nombreContaminante" placeholder="Ejemplo: PM10">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="descripcionContaminante" class="form-label">Descripción</label>
-                                        <textarea class="form-control" id="descripcionContaminante" rows="3" placeholder="Ejemplo: Son partículas sólidas o líquidas suspendidas en el aire."></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="button" class="btn btn-primary" id="btnGuardarContaminante">Guardar</button>
+                                    <form id="formAgregarContaminante">
+                                        <div class="mb-3">
+                                            <label for="nombreContaminante" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="nombreContaminante" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="descripcionContaminante" class="form-label">Descripción</label>
+                                            <textarea class="form-control" id="descripcionContaminante" rows="3" required></textarea>
+                                        </div>
+                                        <button type="button" id="btnGuardarContaminante" class="btn btn-primary">Guardar</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -318,24 +313,23 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="mb-3">
-                                        <label for="selectContaminante" class="form-label">Seleccionar Contaminante</label>
-                                        <select class="form-select" id="selectContaminante">
-                                            <!-- Opciones dinámicas cargadas desde la base de datos -->
-                                        </select>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="editarNombreContaminante" class="form-label">Nuevo Nombre</label>
-                                        <input type="text" class="form-control" id="editarNombreContaminante" placeholder="Nuevo nombre">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="editarDescripcionContaminante" class="form-label">Nueva Descripción</label>
-                                        <textarea class="form-control" id="editarDescripcionContaminante" rows="3" placeholder="Nueva descripción"></textarea>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="button" class="btn btn-primary" id="btnGuardarCambiosContaminante">Guardar Cambios</button>
+                                    <form id="formEditarContaminante">
+                                        <div class="mb-3">
+                                            <label for="selectContaminante" class="form-label">Contaminante</label>
+                                            <select class="form-select" id="selectContaminante" required>
+                                                <option value="">Seleccione un contaminante</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editarNombreContaminante" class="form-label">Nombre</label>
+                                            <input type="text" class="form-control" id="editarNombreContaminante" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="editarDescripcionContaminante" class="form-label">Descripción</label>
+                                            <textarea class="form-control" id="editarDescripcionContaminante" rows="3" required></textarea>
+                                        </div>
+                                        <button type="button" id="btnGuardarCambiosContaminante" class="btn btn-primary">Guardar cambios</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -350,14 +344,15 @@
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
-                                    <label for="selectEliminarContaminante" class="form-label">Seleccionar Contaminante</label>
-                                    <select class="form-select" id="selectEliminarContaminante" multiple>
-                                        <!-- Opciones dinámicas cargadas desde la base de datos -->
-                                    </select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                                    <button type="button" class="btn btn-danger" id="btnEliminarContaminantes">Eliminar Seleccionados</button>
+                                    <form id="formEliminarContaminante">
+                                        <div class="mb-3">
+                                            <label for="selectEliminarContaminante" class="form-label">Seleccione un contaminante</label>
+                                            <select class="form-select" id="selectEliminarContaminante" required>
+                                                <option value="">Seleccione un contaminante</option>
+                                            </select>
+                                        </div>
+                                    </form>
+                                    <button type="button" id="btnEliminarContaminante" class="btn btn-danger">Eliminar</button>
                                 </div>
                             </div>
                         </div>

@@ -10,6 +10,7 @@ var geopointsRouter = require('./routes/geopoints');
 var statisticsRouter = require('./routes/statistics');
 var regionRoutes = require('./routes/region');
 var estacionRoutes = require('./routes/estacion');
+var contaminanteRoutes = require('./routes/contaminante');
 
 
 var app = express();
@@ -41,7 +42,7 @@ app.use('/api', geopointsRouter);
 app.use('/api', statisticsRouter);
 app.use('/api', regionRoutes);
 app.use('/api', estacionRoutes);
-
+app.use('/api', contaminanteRoutes);
 
 // Manejador de errores 404
 app.use(function(req, res, next) {
