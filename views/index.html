@@ -358,117 +358,79 @@
                         </div>
                     </div>
 
+                    <!-- Menú de Consultas y Gráficos -->
                     <li class="nav-item mb-3 dropdown">
-                        <button class="dropbtn nav-link text-light" id="consultasGraficos">Consultas y Gráficos</button>
+                        <button class="dropbtn nav-link text-light" id="btnConsultasGraficos">Consultas y Gráficos</button>
                         <div class="dropdown-content">
                             <!-- Opción "Análisis de Datos" -->
-                            <button class="sub-dropbtn" data-bs-toggle="modal"
-                                data-bs-target="#modalAnalisisDatos">Análisis
-                                de Datos</button>
+                            <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalAnalisisDatosConsultas">Análisis de Datos</button>
                         </div>
                     </li>
 
                     <!-- Modal "Análisis de Datos" -->
-                    <div class="modal fade" id="modalAnalisisDatos" tabindex="-1" aria-labelledby="analisisDatosLabel"
-                        aria-hidden="true">
+                    <div class="modal fade" id="modalAnalisisDatosConsultas" tabindex="-1" aria-labelledby="analisisDatosLabel" aria-hidden="true">
                         <form id="analisis-form">
                             <div class="modal-dialog">
                                 <div class="modal-content text-black">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="analisisDatosLabel">Análisis de Datos</h5>
-                                        <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Año (Checkbox) -->
+                                        <!-- Rango de Fechas -->
                                         <div class="mb-3">
-                                            <label for="selectAño" class="form-label">Año</label><br>
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="year" type="checkbox" value="2021" id="año2021">
-                                                <label class="form-check-label" for="año2021">
-                                                    2021
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="year" type="checkbox" value="2022" id="año2022">
-                                                <label class="form-check-label" for="año2022">
-                                                    2022
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="year" type="checkbox" value="2023" id="año2023">
-                                                <label class="form-check-label" for="año2023">
-                                                    2023
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input class="form-check-input" name="year" type="checkbox" value="2024" id="año2024">
-                                                <label class="form-check-label" for="año2024">
-                                                    2024
-                                                </label>
-                                            </div>
+                                            <label for="fechaInicio" class="form-label">Fecha Inicio</label>
+                                            <input type="date" class="form-control" id="fechaInicio" value="2024-01-01">
+                                            <label for="fechaFin" class="form-label mt-2">Fecha Fin</label>
+                                            <input type="date" class="form-control" id="fechaFin" value="2024-12-31">
                                         </div>
 
-                                        <!-- Estación (Dropdown) -->
+                                        <!-- Estación (Botones pequeños) -->
                                         <div class="mb-3">
-                                            <label for="selectEstacion" class="form-label">Estación</label>
-                                            <select name="station" class="form-select" id="selectEstacion">
-                                                <option>Via Industrial Occidental</option>
-                                                <option>Portal Occidental</option>
-                                                <option>Portal Oriente</option>
-                                                <option>Casa Verde</option>
-                                                <option>Peaje Sajonia</option>
-                                            </select>
+                                            <label class="form-label">Estación</label>
+                                            <div class="row" id="estacionesContainer">
+                                                <!-- Las estaciones se cargarán dinámicamente como botones -->
+                                            </div>
+                                            <!-- Esta parte solo almacenará la estación seleccionada -->
+                                            <input type="hidden" id="selectedEstacion">
                                         </div>
 
                                         <!-- Contaminante (Checkbox) -->
                                         <div class="mb-3">
-                                            <label for="selectContaminante" class="form-label">Contaminante</label><br>
-                                            <div class="form-check">
-                                                <input name="pollutant" class="form-check-input" type="checkbox" value="PM10" id="pm10">
-                                                <label class="form-check-label" for="pm10">
-                                                    PM10
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input name="pollutant" class="form-check-input" type="checkbox" value="PM2.5" id="pm25">
-                                                <label class="form-check-label" for="pm25">
-                                                    PM2.5
-                                                </label>
-                                            </div>
-                                            <div class="form-check">
-                                                <input name="pollutant" class="form-check-input" type="checkbox" value="SO2" id="so2">
-                                                <label class="form-check-label" for="so2">
-                                                    SO2
-                                                </label>
+                                            <label class="form-label">Contaminante</label><br>
+                                            <div id="contaminante-checkboxes">
+                                                <!-- Los contaminantes se cargarán dinámicamente -->
                                             </div>
                                         </div>
 
-                                        <!-- Estadísticas y Gráficos (Dropdown) -->
+                                        <!-- Estadísticas y Gráficos -->
                                         <div class="mb-3">
-                                            <label for="selectEstadisticas" class="form-label">Estadísticas y
-                                                Gráficos</label>
-                                            <select name="statistic" class="form-select" id="selectEstadisticas">
-                                                <option>Promedio</option>
-                                                <option>Desviación Estándar</option>
-                                                <option>Máximo</option>
-                                                <option>Mínimo</option>
-                                                <option>Mediana</option>
-                                                <option>Rango</option>
-                                                <option>Cuartiles</option>
-                                                <option>Gráfico de Series de Tiempo</option>
-                                                <option>Mapa de Calor</option>
+                                            <label for="selectEstadisticas" class="form-label">Estadísticas y Gráficos</label>
+                                            <select id="selectEstadisticas" class="form-select">
+                                                <option value="promedio">Promedio</option>
+                                                <option value="desviacion">Desviación Estándar</option>
+                                                <option value="maximo">Máximo</option>
+                                                <option value="minimo">Mínimo</option>
+                                                <option value="mediana">Mediana</option>
+                                                <option value="rango">Rango</option>
+                                                <option value="cuartiles">Cuartiles</option>
+                                                <option value="grafico">Gráfico de Series de Tiempo</option>
+                                                <option value="mapacalor">Mapa de Calor</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary"
-                                            data-bs-dismiss="modal">Cancelar</button>
-                                        <button id="generar-analisis" type="submit"  class="btn btn-primary">Generar Análisis</button>
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button id="generar-analisis" type="submit" class="btn btn-primary">Generar Análisis</button>
                                     </div>
                                 </div>
                             </div>
                         </form>
+                    </div>
+
+                    <!-- Resultado del análisis -->
+                    <div id="resultado-analisis" class="mt-4">
+                        <!-- Aquí se mostrará el mensaje con el resultado del análisis -->
                     </div>
 
 
@@ -535,13 +497,12 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Se eliminó la información específica que no deseas mostrar -->
+                                <!-- Los datos filtrados dinámicamente se inyectarán aquí -->
                             </tbody>
                         </table>
                     </div>
 
-                    <div id="chart-panel"
-                        style="width: 50%; margin: auto; background: #eaf5e0; padding: 20px; border-radius: 10px;">
+                    <div id="chart-panel" style="width: 50%; margin: auto; background: #eaf5e0; padding: 20px; border-radius: 10px;">
                         <canvas id="chart"></canvas>
                     </div>
                 </div>
