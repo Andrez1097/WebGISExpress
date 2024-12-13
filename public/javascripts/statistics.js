@@ -7,21 +7,21 @@ $(document).ready(function () {
 
       // Verificar si las estaciones se han recibido correctamente
       if (Array.isArray(estaciones) && estaciones.length > 0) {
-        // Selección del contenedor de estaciones
         const estacionesContainer = $("#estacionesContainer");
         estacionesContainer.empty(); // Limpiar las estaciones anteriores
 
-        // Añadir las estaciones como botones pequeños
+        // Añadir las estaciones como checkboxes
         estaciones.forEach((estacion) => {
-          estacionesContainer.append(
-            `<div class="col-md-3 mb-2">
-                <button class="btn btn-outline-primary btn-block w-100" onclick="seleccionarEstacion(${estacion.id}, '${estacion.nombre}', this)">
-                    ${estacion.nombre}
-                </button>
-            </div>`
-          );
+          estacionesContainer.append(`
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="${estacion.id}" id="estacion-${estacion.id}">
+              <label class="form-check-label" for="estacion-${estacion.id}">
+                ${estacion.nombre}
+              </label>
+            </div>
+          `);
         });
-        console.log("Estaciones agregadas como botones");
+        console.log("Estaciones agregadas como checkboxes");
       } else {
         console.error("No se encontraron estaciones o el array está vacío");
       }
@@ -33,13 +33,16 @@ $(document).ready(function () {
     .then((response) => response.json())
     .then((contaminantes) => {
       const contaminantesContainer = $("#contaminante-checkboxes");
+      contaminantesContainer.empty(); // Limpiar contaminantes anteriores
+
+      // Crear una lista de selección única (radio buttons)
       contaminantes.forEach((contaminante) => {
         contaminantesContainer.append(`
           <div class="form-check">
-              <input class="form-check-input" type="checkbox" value="${contaminante.id}" id="contaminante-${contaminante.id}">
-              <label class="form-check-label" for="contaminante-${contaminante.id}">
-                  ${contaminante.nombre}
-              </label>
+            <input class="form-check-input" type="radio" name="contaminante" value="${contaminante.id}" id="contaminante-${contaminante.id}">
+            <label class="form-check-label" for="contaminante-${contaminante.id}">
+              ${contaminante.nombre}
+            </label>
           </div>
         `);
       });
@@ -50,20 +53,25 @@ $(document).ready(function () {
   $("#analisis-form").on("submit", function (event) {
     event.preventDefault();
 
+    // Obtener las fechas desde y hasta
     const rangoFechas = {
       desde: $("#fechaInicio").val(),
       hasta: $("#fechaFin").val(),
     };
 
-    const estaciones = $("#selectedEstacion").val();
-    const contaminantes = $("input[type='checkbox']:checked")
+    // Obtener las estaciones seleccionadas
+    const estaciones = $("input[type='checkbox']:checked")
       .map(function () {
         return $(this).val();
       })
       .get();
 
+    // Obtener el contaminante seleccionado
+    const contaminante = $("input[name='contaminante']:checked").val();
+
+    // Crear el objeto de filtros
     const filtros = {
-      contaminantes,
+      contaminante,
       estaciones,
       rangoFechas,
     };
@@ -81,13 +89,11 @@ $(document).ready(function () {
       .then((response) => response.json())
       .then((result) => {
         console.log("Resultados obtenidos:", result);
-        
-        // Mostrar el resultado en el contenedor
+
         const resultadoContainer = $("#resultado-analisis");
         resultadoContainer.empty(); // Limpiar el contenedor de resultados previos
-        
+
         if (result && result.length > 0) {
-          // Aquí puedes formatear el resultado de la forma que necesites
           result.forEach((row) => {
             resultadoContainer.append(`
               <div class="card mb-3">
@@ -113,19 +119,3 @@ $(document).ready(function () {
       .catch((error) => console.error("Error al enviar datos:", error));
   });
 });
-
-// Función para seleccionar estación y deseleccionar otras
-function seleccionarEstacion(id, nombre, boton) {
-  const selectedEstacionInput = $("#selectedEstacion");
-
-  // Primero desmarcar todos los botones
-  $("button").removeClass("active");
-
-  // Marcar el botón clicado
-  $(boton).addClass("active");
-
-  // Guardar el ID de la estación seleccionada en el campo oculto
-  selectedEstacionInput.val(id);
-
-  console.log("Estación seleccionada:", nombre);
-}
