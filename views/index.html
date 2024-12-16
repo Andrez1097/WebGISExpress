@@ -16,13 +16,17 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/jquery.dataTables.min.css">
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!--<script src="app.js"></script>-->
     <script src="/javascripts/region.js"></script>
     <script src="/javascripts/statistics.js"></script>
     <script src="javascripts/region.js"></script>
     <script src="javascripts/estacion.js"></script>
     <script src="javascripts/contaminante.js"></script>
+
+    <!-- Cargar Chart.js y math.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/9.4.3/math.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.0.0/math.min.js"></script>
 
     <script src="/javascripts/main.js"></script>
     <title>WebGIS con Barra de Tareas y Puntos Personalizados</title>
@@ -483,30 +487,72 @@
             </div>
         </div>
         <div class="task-container">
-            <!-- Barra de Tareas con tabla y gráficos -->
-            <div id="task-bar-container">
-                <div id="task-bar">
-                    <div id="table-container">
-                        <table id="results-table" class="display">
-                            <thead>
-                                <tr>
-                                    <th>Parámetro</th>
-                                    <th>Valor</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <!-- Los datos filtrados dinámicamente se inyectarán aquí -->
-                            </tbody>
-                        </table>
-                    </div>
 
-                    <div id="chart-panel" style="width: 50%; margin: auto; background: #eaf5e0; padding: 20px; border-radius: 10px;">
-                        <canvas id="chart"></canvas>
-                    </div>
+            <!-- Barra de Tareas con filtros, tabla y gráficos -->
+            <div id="task-bar-container">
+                <div id="filters">
+                    <label for="estacion">Estación:</label>
+                    <select id="estacion" multiple>
+                        <option value="1">Via Industrial Occidental</option>
+                        <option value="2">Portal Occidental</option>
+                        <option value="3">Portal Oriental</option>
+                        <option value="4">Casa Verde</option>
+                        <option value="5">Peaje Sajonia</option>
+                    </select>
+                    
+                    <label for="contaminante">Contaminante:</label>
+                    <select id="contaminante">
+                        <option value="1">PM10</option>
+                        <option value="2">PM2.5</option>
+                        <option value="3">SO2</option>
+                    </select>
+
+                    <label for="fecha-inicio">Fecha Inicio:</label>
+                    <input type="date" id="fecha-inicio">
+
+                    <label for="fecha-fin">Fecha Fin:</label>
+                    <input type="date" id="fecha-fin">
+
+                    <button id="apply-filters">Aplicar Filtros</button>
+                </div>
+
+                <!-- Contenedor de la tabla -->
+                <div id="table-container">
+                    <table id="results-table">
+                        <thead>
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Valor</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Los datos filtrados dinámicamente se inyectarán aquí -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Contenedor del gráfico -->
+                <div id="chart-panel">
+                    <canvas id="chart" width="800" height="400"></canvas>
+                </div>
+
+                <!-- Estadísticas -->
+                <div id="stats-container">
+                    <h3>Estadísticas:</h3>
+                    <ul>
+                        <li>Promedio: <span id="average"></span></li>
+                        <li>Desviación Estándar: <span id="std-dev"></span></li>
+                        <li>Máximo: <span id="max"></span></li>
+                        <li>Mínimo: <span id="min"></span></li>
+                        <li>Mediana: <span id="median"></span></li>
+                        <li>Rango: <span id="range"></span></li>
+                        <li>Cuartil 1: <span id="q1"></span></li>
+                        <li>Cuartil 3: <span id="q3"></span></li>
+                    </ul>
                 </div>
             </div>
-        </div>
-    </div>
+
+<script src="javascripts/data-filter.js"></script>
 
     <!-- Inicialización del mapa -->
     <script>
