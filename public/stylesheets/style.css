@@ -1,4 +1,10 @@
 /* Estilos principales */
+/* Estilos adicionales para el título */
+h4 {
+    text-align: center; /* Centra el texto del título */
+    margin-bottom: 20px; /* Añade espacio debajo del título */
+}
+
 body,
 html {
     margin: 0;
@@ -178,19 +184,20 @@ th {
     overflow-y: auto;
 }
 
-/* Estilo adicional para los botones */
+/* Estilo general para los botones */
 button {
-    padding: 10px 20px;
-    background-color: #14532d; /* Color verde que coincide con el dropbtn */
-    color: white;
-    border: none;
-    border-radius: 5px;
+    padding: 10px 20px; /* Espaciado adecuado */
+    background-color: #14532d; /* Color verde para los botones */
+    color: white; /* Color de texto blanco */
+    border: 1px solid #14532d; /* Borde verde alrededor del botón */
+    border-radius: 5px; /* Bordes redondeados */
     cursor: pointer;
-    transition: background-color 0.3s ease; /* Transición para un cambio suave */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave para el color y el efecto de transformación */
 }
 
 button:hover {
     background-color: #10642c; /* Verde más oscuro cuando el hover está activo */
+    transform: scale(1.05); /* Efecto de aumento al hacer hover */
 }
 
 /* Estilo para cuando el botón o campo tiene foco (selección) */
@@ -198,6 +205,63 @@ button:focus, input:focus, select:focus, textarea:focus {
     outline: none; /* Quita el borde de enfoque predeterminado */
     border: 2px solid #14532d; /* Borde verde cuando el botón o campo tiene foco */
     background-color: #e0f5e0; /* Fondo ligeramente verde claro para dar enfoque */
+}
+
+/* Estilo general para los botones */
+button {
+    padding: 10px 20px; /* Espaciado adecuado */
+    background-color: #14532d; /* Color verde para los botones */
+    color: white; /* Color de texto blanco */
+    border: none; /* Sin borde alrededor del botón */
+    border-radius: 5px; /* Bordes redondeados */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave para el color y el efecto de transformación */
+}
+
+button:hover {
+    background-color: #10642c; /* Verde más oscuro cuando el hover está activo */
+    transform: scale(1.05); /* Efecto de aumento al hacer hover */
+}
+
+/* Estilo para cuando el botón o campo tiene foco (selección) */
+button:focus, input:focus, select:focus, textarea:focus {
+    outline: none; /* Quita el borde de enfoque predeterminado */
+    border: 2px solid #14532d; /* Borde verde cuando el botón o campo tiene foco */
+    background-color: #e0f5e0; /* Fondo ligeramente verde claro para dar enfoque */
+}
+
+/* Estilo para los botones dentro del dropdown */
+.dropdown-content button {
+    color: black; /* Color de texto negro */
+    padding: 8px 12px; /* Espaciado más pequeño para los botones del dropdown */
+    text-decoration: none; /* Eliminar subrayado */
+    display: block; /* Asegura que los botones se apilen verticalmente */
+    border: none; /* Sin borde alrededor del botón */
+    border-radius: 5px; /* Bordes redondeados */
+    background-color: transparent; /* Fondo transparente por defecto */
+    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición para el hover */
+}
+
+/* Cambiar color de los enlaces en el dropdown al pasar el ratón */
+.dropdown-content button:hover {
+    background-color: #93d34e; /* Fondo verde claro en hover */
+    transform: scale(1.05); /* Efecto de aumento al hacer hover */
+}
+
+/* Mostrar el menú desplegable cuando el dropdown es activado por hover */
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+
+/* Cambiar el fondo del botón principal del dropdown cuando el contenido del dropdown se muestra */
+.dropdown:hover .dropbtn {
+    background-color: #3e8e41; /* Fondo verde más oscuro cuando se despliega */
+}
+
+/* Estilo para el contenedor del dropdown */
+.dropdown {
+    position: relative; /* Para posicionar el contenido del dropdown */
+    display: inline-block; /* Asegura que el dropdown se alinee correctamente */
 }
 
 /* Estilo para los labels */

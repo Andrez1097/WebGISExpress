@@ -363,16 +363,15 @@
                     </div>
 
                     <!-- Menú de Consultas y Gráficos -->
-                    <li class="nav-item mb-3 dropdown">
+                    <!-- <li class="nav-item mb-3 dropdown">
                         <button class="dropbtn nav-link text-light" id="btnConsultasGraficos">Consultas y Gráficos</button>
                         <div class="dropdown-content">
-                            <!-- Opción "Análisis de Datos" -->
                             <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalAnalisisDatosConsultas">Análisis de Datos</button>
                         </div>
                     </li>
 
                     <!-- Modal "Análisis de Datos" -->
-                    <div class="modal fade" id="modalAnalisisDatosConsultas" tabindex="-1" aria-labelledby="analisisDatosLabel" aria-hidden="true">
+                    <!-- <div class="modal fade" id="modalAnalisisDatosConsultas" tabindex="-1" aria-labelledby="analisisDatosLabel" aria-hidden="true">
                         <form id="analisis-form">
                             <div class="modal-dialog">
                                 <div class="modal-content text-black">
@@ -381,33 +380,21 @@
                                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                     </div>
                                     <div class="modal-body">
-                                        <!-- Rango de Fechas -->
                                         <div class="mb-3">
                                             <label for="fechaInicio" class="form-label">Fecha Inicio</label>
                                             <input type="date" class="form-control" id="fechaInicio" value="2024-01-01">
                                             <label for="fechaFin" class="form-label mt-2">Fecha Fin</label>
                                             <input type="date" class="form-control" id="fechaFin" value="2024-12-31">
                                         </div>
-
-                                        <!-- Estación (Botones pequeños) -->
                                         <div class="mb-3">
                                             <label class="form-label">Estación</label>
-                                            <div class="row" id="estacionesContainer">
-                                                <!-- Las estaciones se cargarán dinámicamente como botones -->
-                                            </div>
-                                            <!-- Esta parte solo almacenará la estación seleccionada -->
+                                            <div class="row" id="estacionesContainer"></div>
                                             <input type="hidden" id="selectedEstacion">
                                         </div>
-
-                                        <!-- Contaminante (Checkbox) -->
                                         <div class="mb-3">
                                             <label class="form-label">Contaminante</label><br>
-                                            <div id="contaminante-checkboxes">
-                                                <!-- Los contaminantes se cargarán dinámicamente -->
-                                            </div>
+                                            <div id="contaminante-checkboxes"></div>
                                         </div>
-
-                                        <!-- Estadísticas y Gráficos -->
                                         <div class="mb-3">
                                             <label for="selectEstadisticas" class="form-label">Estadísticas y Gráficos</label>
                                             <select id="selectEstadisticas" class="form-select">
@@ -431,36 +418,28 @@
                     </div>
 
                     <!-- Resultado del análisis -->
-                    <div id="resultado-analisis" class="mt-4">
-                        <!-- Aquí se mostrará el mensaje con el resultado del análisis -->
-                    </div>
+                    <!-- <div id="resultado-analisis" class="mt-4"></div>
 
-
-                    <li class="nav-item mb-3 dropdown">
+                    <!-- Menú de Exportación de Datos -->
+                    <!-- <li class="nav-item mb-3 dropdown">
                         <button class="dropbtn nav-link text-light" id="exportacionDatos">Exportación de Datos</button>
                         <div class="dropdown-content">
-                            <!-- Opción "Exportar Datos" -->
-                            <button class="sub-dropbtn" data-bs-toggle="modal"
-                                data-bs-target="#modalExportacionDatos">Exportar Datos</button>
+                            <button class="sub-dropbtn" data-bs-toggle="modal" data-bs-target="#modalExportacionDatos">Exportar Datos</button>
                         </div>
                     </li>
 
                     <!-- Modal "Exportación de Datos" -->
-                    <div class="modal fade" id="modalExportacionDatos" tabindex="-1"
-                        aria-labelledby="exportacionDatosLabel" aria-hidden="true">
+                    <!-- <div class="modal fade" id="modalExportacionDatos" tabindex="-1" aria-labelledby="exportacionDatosLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content text-black">
                                 <div class="modal-header">
                                     <h5 class="modal-title" id="exportacionDatosLabel">Exportación de Datos</h5>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                 </div>
                                 <div class="modal-body">
                                     <form>
-                                        <!-- Selección única -->
                                         <div class="mb-3">
-                                            <label for="tipoExportacion" class="form-label">Seleccionar formato de
-                                                exportación</label>
+                                            <label for="tipoExportacion" class="form-label">Seleccionar formato de exportación</label>
                                             <select class="form-select" id="tipoExportacion">
                                                 <option value="CSV">CSV</option>
                                                 <option value="JSON">JSON</option>
@@ -470,13 +449,13 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-bs-dismiss="modal">Cancelar</button>
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                                     <button type="button" class="btn btn-primary">Exportar</button>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </div> -->
+
 
                 </ul>
             </nav>

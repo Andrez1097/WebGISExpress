@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Importación de rutas existentes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var geopointsRouter = require('./routes/geopoints');
@@ -12,6 +13,8 @@ var regionRoutes = require('./routes/region');
 var estacionRoutes = require('./routes/estacion');
 var contaminanteRoutes = require('./routes/contaminante');
 
+// Importación del nuevo archivo de rutas
+var dataFilterRoutes = require('./routes/data-filter'); // Ruta al nuevo archivo
 
 var app = express();
 const cors = require('cors');
@@ -35,14 +38,17 @@ app.use(
   })
 );
 
-// Rutas
+// Rutas existentes
 app.use('/', indexRouter);
-//app.use('/users', usersRouter);
+// app.use('/users', usersRouter);
 app.use('/api', geopointsRouter);
 app.use('/api', statisticsRouter);
 app.use('/api', regionRoutes);
 app.use('/api', estacionRoutes);
 app.use('/api', contaminanteRoutes);
+
+// Nueva ruta para data-filter.js
+app.use('/api', dataFilterRoutes); // Integra las rutas del nuevo archivo
 
 // Manejador de errores 404
 app.use(function(req, res, next) {
