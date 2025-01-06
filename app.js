@@ -13,9 +13,6 @@ var regionRoutes = require('./routes/region');
 var estacionRoutes = require('./routes/estacion');
 var contaminanteRoutes = require('./routes/contaminante');
 
-// Importación del nuevo archivo de rutas
-var dataFilterRoutes = require('./routes/data-filter'); // Ruta al nuevo archivo
-
 var app = express();
 const cors = require('cors');
 
@@ -47,8 +44,6 @@ app.use('/api', regionRoutes);
 app.use('/api', estacionRoutes);
 app.use('/api', contaminanteRoutes);
 
-// Nueva ruta para data-filter.js
-app.use('/api', dataFilterRoutes); // Integra las rutas del nuevo archivo
 
 // Manejador de errores 404
 app.use(function(req, res, next) {
