@@ -1,4 +1,5 @@
 /* Estilos principales */
+
 /* Estilos adicionales para el título */
 h4 {
     text-align: center; /* Centra el texto del título */
@@ -85,22 +86,18 @@ html {
     background: #14532d;
     color: #ffffff;
 }
+
 #task-bar-container {
     display: block;
 }
-#map{
+
+#map {
     height: 100vh;
 }
 
-.modal-content{
-    color:#000;
+.modal-content {
+    color: #000;
 }
-/* .main-container {
-
-}*/
-/* .task-container {
-
-}*/
 
 /* Reset de márgenes y paddings por defecto */
 * {
@@ -190,29 +187,6 @@ button {
     background-color: #14532d; /* Color verde para los botones */
     color: white; /* Color de texto blanco */
     border: 1px solid #14532d; /* Borde verde alrededor del botón */
-    border-radius: 5px; /* Bordes redondeados */
-    cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave para el color y el efecto de transformación */
-}
-
-button:hover {
-    background-color: #10642c; /* Verde más oscuro cuando el hover está activo */
-    transform: scale(1.05); /* Efecto de aumento al hacer hover */
-}
-
-/* Estilo para cuando el botón o campo tiene foco (selección) */
-button:focus, input:focus, select:focus, textarea:focus {
-    outline: none; /* Quita el borde de enfoque predeterminado */
-    border: 2px solid #14532d; /* Borde verde cuando el botón o campo tiene foco */
-    background-color: #e0f5e0; /* Fondo ligeramente verde claro para dar enfoque */
-}
-
-/* Estilo general para los botones */
-button {
-    padding: 10px 20px; /* Espaciado adecuado */
-    background-color: #14532d; /* Color verde para los botones */
-    color: white; /* Color de texto blanco */
-    border: none; /* Sin borde alrededor del botón */
     border-radius: 5px; /* Bordes redondeados */
     cursor: pointer;
     transition: background-color 0.3s ease, transform 0.3s ease; /* Transición suave para el color y el efecto de transformación */
